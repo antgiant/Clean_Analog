@@ -36,7 +36,7 @@ static const GPathInfo MINUTE_HAND_POINTS = {
 	.points = (GPoint []) {{-5, 14}, {-5, 0}, {0, -65}, {5, 0}, {5, 14}}
 };
 static const GPathInfo SECOND_HAND_POINTS = {
-	.num_points = 3,
+	.num_points = 2,
 	.points = (GPoint []) {{-1, 14}, {-1, -65}}
 };
 
@@ -102,13 +102,8 @@ void draw_hour_hand(Layer *layer, GContext *ctx) {
 	graphics_context_set_stroke_color(ctx, ForegroundColor);
 
     get_time(&t);
-	hour = t.tm_hour;
+	hour = t.tm_hour%12;
 	minute = t.tm_min;
-
-	if(!clock_is_24h_style()) {
-		hour = hour%12;
-		if(hour == 0) hour=12;
-	}
 	
 	//Rotate hour hand to to proper spot (30 degrees per hour + 1 degree per 2 minutes)
 	gpath_rotate_to(&hour_hand, (TRIG_MAX_ANGLE / 360) * ((30*hour) + (minute/2)));
